@@ -3,6 +3,7 @@ import mss.tools
 import os
 import json
 from pathlib import Path
+import time
 
 downloads_path = Path.home() / "Downloads"
 caminho_imagens = downloads_path / "caminho_imagens"
@@ -23,7 +24,8 @@ with mss.MSS() as sct:
     while contador < 15:
         contador += 1
         sct.shot(output=str(caminho_imagens / f"print_spawn{numSpawn}_N{contador}.png"))
-    spawn_pegado = input("Qual spawn você pegou? ")
+        time.sleep(1)
+    spawn_atual = input("Qual spawn você pegou? ")
     with open(json_path / "spawnCounter.json", "w") as f:
-        json.dump({"numSpawn": spawn_pegado}, f)
+        json.dump({"numSpawn": spawn_atual}, f)
 
