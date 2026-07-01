@@ -2,30 +2,26 @@ import mss
 import mss.tools
 import os
 import json
+import sys
 from pathlib import Path
 import time
 
 downloads_path = Path.home() / "Downloads"
 caminho_imagens = downloads_path / "caminho_imagens"
+
+numSpawn = sys.argv[1] if len(sys.argv) > 1 else input("Qual spawn voce pegou? ")
+
+imgSave = caminho_imagens / f"spawn{numSpawn}"
+os.makedirs(imgSave, exist_ok=True)
+
 json_path = Path("C:/Users/mateu/Downloads/AITraining")
-try:
-    with open(json_path / "spawnCounter.json", "r") as f:
-        numSpawn = json.load(f)["numSpawn"]
-except FileNotFoundError:
-    numSpawn = 1
-
-total_spawns = 31
-os.makedirs(caminho_imagens, exist_ok=True)
-
-
+with open(json_path / "spawnCounter.json", "w") as f:
+    json.dump({"numSpawn": numSpawn}, f)
 
 with mss.MSS() as sct:
     contador = 0
     while contador < 15:
         contador += 1
-        sct.shot(output=str(caminho_imagens / f"print_spawn{numSpawn}_N{contador}.png"))
+        sct.shot(output=str(imgSave / f"{contador}.png"))
         time.sleep(1)
-    spawn_atual = input("Qual spawn você pegou? ")
-    with open(json_path / "spawnCounter.json", "w") as f:
-        json.dump({"numSpawn": spawn_atual}, f)
 
