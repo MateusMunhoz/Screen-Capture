@@ -26,8 +26,8 @@ with open(json_path / "spawnCounter.json", "w") as f:
 
 with mss.MSS() as sct:
     contador = 0
-    while contador < 15:
+    while contador < 150:
         contador += 1
         sct.shot(output=str(imgsaveMapSel / f"{contador}.png"))
-        time.sleep(0.5)
+
 
