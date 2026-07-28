@@ -193,6 +193,8 @@ class Overlay:
 
     def rodar_script(self, spawn, mapa):
         script_dir = os.path.dirname(os.path.abspath(__file__))
+        if hasattr(self, "janela_mapa") and self.janela_mapa.winfo_exists():
+            self.janela_mapa.destroy()
         self.root.withdraw()
         self.processo = subprocess.Popen(
             [sys.executable, os.path.join(script_dir, "pytorchTraining.py"), spawn, mapa],
