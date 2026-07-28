@@ -18,6 +18,15 @@ ACCENT_HV = "#9184f8"
 ERRO_BG   = "#3a1e28"
 ERRO_FG   = "#ff5c7a"
 
+# ---- Dados dos mapas ----
+MAPS_INFO = {"CUSTOMS": 24, "SHORELINE": 26, "WOODS": 28}
+
+MAPS_IMAGENS = {
+    "CUSTOMS":   ["EsquerdaSpawns.png", "DireitaSpawns.png"],
+    "SHORELINE": ["spawns shoreline.png"],
+    "WOODS":     ["spawns woods.png"],
+}
+
 
 def hover(widget, cor_hover, cor_normal):
     widget.bind("<Enter>", lambda e: widget.config(bg=cor_hover))
@@ -66,15 +75,17 @@ class Overlay:
 
         self.root.mainloop()
 
-    def exibir_mapa(self):
+    def exibir_mapa(self, mapa):
         script_dir = os.path.dirname(os.path.abspath(__file__))
         self.janela_mapa = tk.Toplevel(self.root)
-        self.janela_mapa.title("Mapa de Spawns")
+        self.janela_mapa.title(f"Spawns - {mapa}")
         self.janela_mapa.wm_attributes('-topmost', True)
         self.janela_mapa.geometry("+20+20")
         self.janela_mapa.configure(bg=BG_MAIN)
 
-        for nome in ["EsquerdaSpawns.png", "DireitaSpawns.png"]:
+        imagens = MAPS_IMAGENS.get(mapa, [])
+        achou = False
+        for nome in imagens:
             caminho = os.path.join(script_dir, nome)
             if os.path.exists(caminho):
                 img = Image.open(caminho)
@@ -82,6 +93,11 @@ class Overlay:
                 lbl = tk.Label(self.janela_mapa, image=foto, bg=BG_MAIN)
                 lbl.image = foto
                 lbl.pack(side="left", padx=4, pady=4)
+                achou = True
+
+        if not achou:
+            tk.Label(self.janela_mapa, text=f"Sem legenda para {mapa}",
+                     fg=FG, bg=BG_MAIN).pack(padx=20, pady=20)
 
     def on_press(self, key):
         if hasattr(key, 'name') and key.name == 'f8':
@@ -135,24 +151,33 @@ class Overlay:
             bg=BG_CARD, fg=FG_DIM,
             activebackground=BG_CARD, activeforeground=FG,
             relief="flat", bd=0, cursor="hand2",
-            command=self.exibir_mapa)
+            disabledforeground=FG_DIM,
+            state="disabled",
+            command=lambda: self.exibir_mapa(entryMap.get().upper()))
         legenda.pack(pady=(10, 2))
-        hover(legenda, BG_CARD, BG_CARD)
+
+        def atualizar_legenda(event=None):
+            mapa_digitado = entryMap.get().strip().upper()
+            if mapa_digitado in MAPS_IMAGENS:
+                legenda.config(state="normal", fg=FG)
+            else:
+                legenda.config(state="disabled", fg=FG_DIM)
+
+        entryMap.bind("<KeyRelease>", atualizar_legenda)
 
         entryMap.bind("<Return>", lambda e: entrySpawn.focus_set())
 
         def confirmar():
-            mapsInfo = {"CUSTOMS": 24, "SHORELINE": 26, "WOODS": 28}
             spawn_str = entrySpawn.get()
             spawn_int = int(spawn_str)
             mapa = entryMap.get().upper()
 
-            if mapa in mapsInfo and spawn_int <= mapsInfo[mapa]:
+            if mapa in MAPS_INFO and spawn_int <= MAPS_INFO[mapa]:
                 self.rodar_script(spawn_str, mapa)
                 tk.Label(popup, text="Tirando prints", fg=FG, bg=BG_MAIN).pack(pady=5)
                 popup.destroy()
             else:
-                messagebox.showerror("Erro, spawn ou mapa invalido", f"Esse mapa só tem {mapsInfo[mapa]} spawns")
+                messagebox.showerror("Erro, spawn ou mapa invalido", f"Esse mapa só tem {MAPS_INFO[mapa]} spawns")
 
         entrySpawn.bind("<Return>", lambda e: confirmar())
 
