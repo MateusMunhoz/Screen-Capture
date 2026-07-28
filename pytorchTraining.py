@@ -6,7 +6,6 @@ import os
 import json
 import sys
 from pathlib import Path
-import time
 
 downloads_path = Path.home() / "Downloads"
 caminho_imagens = downloads_path / "caminho_imagens"
