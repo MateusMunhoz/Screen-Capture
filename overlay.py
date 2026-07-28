@@ -111,22 +111,23 @@ class Overlay:
         legenda = tk.Button(popup, text="Legenda", command=self.exibir_mapa, fg="#ffffff", bg='#2b2b2b')
         legenda.pack(pady=2)
 
-        entryMap.bind("<Return>", lambda e: confirmar())
+        entryMap.bind("<Return>", lambda e: entrySpawn.focus_set())
 
 
 
         def confirmar():
-            mapsInfo = {"Customs": 24, "Shoreline":26}
+            mapsInfo = {"CUSTOMS": 24, "SHORELINE":26, "WOODS": 28}
             spawn_str = entrySpawn.get()
             spawn_int = int(spawn_str)
-            mapa = entryMap.get()
+            mapa = entryMap.get().upper()
+
 
             if mapa in mapsInfo and spawn_int <= mapsInfo[mapa]:
                 self.rodar_script(spawn_str, mapa)
                 tk.Label(popup, text="Tirando prints",fg="#ffffff", bg='#2b2b2b').pack(pady=5)
                 popup.destroy()
             else:
-                messagebox.showerror("Erro, spawn invalido", f"Esse mapa só tem {mapsInfo[mapa]} spawns")
+                messagebox.showerror("Erro, spawn ou mapa invalido", f"Esse mapa só tem {mapsInfo[mapa]} spawns")
 
 
         entrySpawn.bind("<Return>", lambda e: confirmar())
@@ -142,7 +143,7 @@ class Overlay:
         self.processo = subprocess.Popen(
             [sys.executable, os.path.join(script_dir, "pytorchTraining.py"), spawn, mapa],
             cwd=script_dir
-        )
+        ) 
         self.root.after(500, self.verificar_processo)
 
     def verificar_processo(self):
