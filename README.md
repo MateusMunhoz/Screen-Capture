@@ -16,7 +16,7 @@ Ferramenta simples em Python para capturar telas automaticamente e organizar pri
 |-----------|--------|------------------------------------|
 | CUSTOMS   | 24     | `EsquerdaSpawns.png`, `DireitaSpawns.png` |
 | SHORELINE | 26     | `spawns shoreline.png`             |
-| WOODS     | 28     | `spawns woods.png`                 |
+
 
 ## Estrutura do projeto
 
