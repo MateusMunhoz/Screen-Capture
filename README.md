@@ -1,4 +1,4 @@
-# Screen Capture - Spawn Training Tool
+# Screen Capture - Ferramenta de reconhecimento de imagens
 
 Ferramenta simples em Python para capturar telas automaticamente e organizar prints por spawn e mapa. Feito para coletar imagens a serem usadas para treinamento de uma IA que identifique aonde o player spawnou.
 
